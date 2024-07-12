@@ -212,7 +212,9 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+    x = !!(x);
+    x = ~x + 1;
+    return (x & y) | (~x & z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -222,7 +224,8 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+    int TMin = 1 << 31;
+    return !((y + (~x + 1)) & TMin);
 }
 //4
 /* 
@@ -234,8 +237,10 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+    // return (~((x | (~x + 1)) >> 31) >> 31) & 0x1; // its work, but too complicate
+    return ((x | (~x + 1)) >> 31) + 1;
 }
+
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
  *  Examples: howManyBits(12) = 5
@@ -249,7 +254,23 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+    int sign = (x >> 31);
+    int abs_x = (sign & (~x)) | (~sign & x);
+    int b16, b8, b4, b2, b1, b0;
+
+    b16 = (!!(abs_x >> 16)) << 4;
+    abs_x = abs_x >> b16;
+    b8 = (!!(abs_x >> 8)) << 3;
+    abs_x = abs_x >> b8;
+    b4 = (!!(abs_x >> 4)) << 2;
+    abs_x = abs_x >> b4;
+    b2 = (!!(abs_x >> 2)) << 1;
+    abs_x = abs_x >> b2;
+    b1 = (!!(abs_x >> 1));
+    abs_x = abs_x >> b1;
+    b0 = abs_x;
+
+    return b16 + b8 + b4 + b2 + b1 + b0 + 1;
 }
 //float
 /* 
