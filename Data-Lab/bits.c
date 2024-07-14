@@ -285,7 +285,19 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+    int sign = (uf >> 31) & 0x1;
+    int exp = (uf >> 23) & 0xFF;
+
+    if (exp == 0xFF) // infinite OR NaN
+        return uf;
+    else if (exp == 0) // denormalized
+        return ((uf & 0x7FFFFF) << 1) | (sign << 31);
+
+    exp += 1;
+    if (exp == 0xFF) // overflow to infinite
+        return (sign << 31) | 0x7F800000;
+
+    return (uf & 0x807FFFFF) | (exp << 23); // normalized
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
@@ -300,7 +312,17 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+    int TMin = 1 << 31;
+    int exp = ((uf >> 23) & 0xFF) - 127; // -126 ~ +127
+    int frac = (uf & 0x7FFFFF) | 0x00800000; // 1.xxx
+
+    if (exp > 31)
+        return TMin;
+    else if (exp < 0)
+        return 0;
+
+    frac = (exp > 23) ? (frac << (exp - 23)) : (frac >> (23 - exp));
+    return (uf & TMin) ? -frac : frac;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
@@ -316,5 +338,10 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-    return 2;
+    if (x > 127)
+        return 0x7F800000;
+    else if (x < -126)
+        return 0;
+
+    return (x + 127) << 23;
 }
