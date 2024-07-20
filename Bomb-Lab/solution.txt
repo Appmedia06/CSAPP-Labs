@@ -1,2 +1,18 @@
-Border relations with Canada have never been better.
-1 2 4 8 16 32
+answer1:
+	Border relations with Canada have never been better.
+answer2:
+	1 2 4 8 16 32
+answer3:
+	0 207
+	1 311
+	2 707
+	3 256
+	4 389
+	5 206
+	6 682
+	7 327
+answer4:
+	0 0
+	1 0
+	3 0
+	7 0
