@@ -19,3 +19,5 @@ answer4:
 answer5:
 	ionefg
 	IONEFG
+answer6:
+	4 3 2 1 6 5
