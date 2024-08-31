@@ -34,52 +34,55 @@ ncopy:
 	iaddq $-7, %rcx     # limit -= 7
 	jle Remain		# if so, goto Done:
 
+Load:
+    mrmovq (%rdi), %r8 # read val from src...
+    mrmovq 8(%rdi), %r9 # read val from src...
+    mrmovq 16(%rdi), %r10 # read val from src...
+    mrmovq 24(%rdi), %r11 # read val from src...
+    mrmovq 32(%rdi), %r12 # read val from src...
+    mrmovq 40(%rdi), %r13 # read val from src...
+    mrmovq 48(%rdi), %r14 # read val from src...
+    mrmovq 56(%rdi), %rbp # read val from src...
+Store:
+    rmmovq %r8, (%rsi) # ...and store it to dst
+    rmmovq %r9, 8(%rsi) # ...and store it to dst
+    rmmovq %r10, 16(%rsi) # ...and store it to dst
+    rmmovq %r11, 24(%rsi) # ...and store it to dst
+    rmmovq %r12, 32(%rsi) # ...and store it to dst
+    rmmovq %r13, 40(%rsi) # ...and store it to dst
+    rmmovq %r14, 48(%rsi) # ...and store it to dst
+    rmmovq %rbp, 56(%rsi) # ...and store it to dst
+
 Loop0:	
-    mrmovq (%rdi), %r10	# read val from src...
-	rmmovq %r10, (%rsi)	# ...and store it to dst
-	andq %r10, %r10		# val <= 0?
+	andq %r8, %r8		# val <= 0?
 	jle Loop1		# if so, goto Npos:
 	iaddq $1, %rax		# count++
 Loop1:  
-    mrmovq 8(%rdi), %r10 # read val from src...
-    rmmovq %r10, 8(%rsi) # ...and store it to dst
-    andq %r10, %r10     # val <= 0?
+    andq %r9, %r9     # val <= 0?
     jle Loop2       # if so, goto Npos:
     iaddq $1, %rax      # count++
 Loop2:  
-    mrmovq 16(%rdi), %r10 # read val from src...
-    rmmovq %r10, 16(%rsi) # ...and store it to dst
     andq %r10, %r10     # val <= 0?
     jle Loop3       # if so, goto Npos:
     iaddq $1, %rax      # count++
 Loop3:  
-    mrmovq 24(%rdi), %r10 # read val from src...
-    rmmovq %r10, 24(%rsi) # ...and store it to dst
-    andq %r10, %r10     # val <= 0?
+    andq %r11, %r11     # val <= 0?
     jle Loop4       # if so, goto Npos:
     iaddq $1, %rax      # count++
 Loop4:  
-    mrmovq 32(%rdi), %r10 # read val from src...
-    rmmovq %r10, 32(%rsi) # ...and store it to dst
-    andq %r10, %r10     # val <= 0?
+    andq %r12, %r12     # val <= 0?
     jle Loop5       # if so, goto Npos:
     iaddq $1, %rax      # count++
 Loop5:  
-    mrmovq 40(%rdi), %r10 # read val from src...
-    rmmovq %r10, 40(%rsi) # ...and store it to dst
-    andq %r10, %r10     # val <= 0?
+    andq %r13, %r13     # val <= 0?
     jle Loop6       # if so, goto Npos:
     iaddq $1, %rax      # count++
 Loop6:  
-    mrmovq 48(%rdi), %r10 # read val from src...
-    rmmovq %r10, 48(%rsi) # ...and store it to dst
-    andq %r10, %r10     # val <= 0?
+    andq %r14, %r14     # val <= 0?
     jle Loop7       # if so, goto Npos:
     iaddq $1, %rax      # count++
 Loop7:  
-    mrmovq 56(%rdi), %r10 # read val from src...
-    rmmovq %r10, 56(%rsi) # ...and store it to dst
-    andq %r10, %r10     # val <= 0?
+    andq %rbp, %rbp     # val <= 0?
     jle test            # if so, goto Npos:
     iaddq $1, %rax      # count++
 test:	
@@ -87,7 +90,7 @@ test:
 	iaddq $64, %rsi		# dst += 8
     iaddq $-8, %rdx     # len -= 8
     iaddq $-8, %rcx     # limit -= 8
-	jg Loop0			# if so, goto Loop:
+	jg Load 			# if so, goto Loop:
 RemainTest:
     andq %rdx, %rdx
     jle Done
@@ -118,66 +121,66 @@ EndFun:
 ###############################
 	.align 8
 src:
-	.quad -1
-	.quad 2
-	.quad 3
+	.quad 1
+	.quad -2
+	.quad -3
 	.quad -4
 	.quad 5
-	.quad 6
+	.quad -6
 	.quad 7
 	.quad 8
 	.quad 9
 	.quad -10
 	.quad 11
 	.quad 12
-	.quad 13
-	.quad 14
-	.quad -15
-	.quad 16
+	.quad -13
+	.quad -14
+	.quad 15
+	.quad -16
 	.quad 17
 	.quad 18
 	.quad -19
 	.quad -20
 	.quad -21
-	.quad -22
+	.quad 22
 	.quad 23
 	.quad -24
 	.quad -25
 	.quad 26
-	.quad -27
+	.quad 27
 	.quad 28
 	.quad 29
 	.quad 30
 	.quad 31
-	.quad 32
+	.quad -32
 	.quad -33
 	.quad 34
 	.quad -35
-	.quad -36
-	.quad -37
-	.quad -38
-	.quad -39
+	.quad 36
+	.quad 37
+	.quad 38
+	.quad 39
 	.quad 40
 	.quad -41
 	.quad 42
 	.quad -43
-	.quad -44
-	.quad 45
-	.quad 46
-	.quad -47
+	.quad 44
+	.quad -45
+	.quad -46
+	.quad 47
 	.quad 48
 	.quad -49
-	.quad -50
-	.quad -51
+	.quad 50
+	.quad 51
 	.quad 52
 	.quad -53
 	.quad -54
-	.quad 55
+	.quad -55
 	.quad -56
-	.quad 57
+	.quad -57
 	.quad -58
 	.quad -59
-	.quad 60
+	.quad -60
 	.quad -61
 	.quad -62
 	.quad -63
