@@ -60,8 +60,8 @@ long long gen_need_valC()
 
 long long gen_f_predPC()
 {
-    return (((if_id_next->icode) == (I_JMP) || (if_id_next->icode) == 
-        (I_CALL)) ? (if_id_next->valc) : (if_id_next->valp));
+    return (((if_id_next->icode) == (I_CALL)) ? (if_id_next->valc) : 
+      (if_id_next->valp));
 }
 
 long long gen_d_srcA()

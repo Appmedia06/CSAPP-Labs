@@ -30,7 +30,7 @@ ncopy:
 # You can modify this portion
 	# Loop header
 	xorq %rax,%rax		# count = 0;
-	iaddq $-7, %rdx     # limit -= 7
+	iaddq $-3, %rdx     # limit -= 7
 	jle R0       		# if so, goto Done:
 
 Load:
@@ -38,20 +38,11 @@ Load:
     mrmovq 8(%rdi), %r9 # read val from src...
     mrmovq 16(%rdi), %r10 # read val from src...
     mrmovq 24(%rdi), %r11 # read val from src...
-    mrmovq 32(%rdi), %r12 # read val from src...
-    mrmovq 40(%rdi), %r13 # read val from src...
-    mrmovq 48(%rdi), %r14 # read val from src...
-    mrmovq 56(%rdi), %rbp # read val from src...
 Store:
     rmmovq %r8, (%rsi) # ...and store it to dst
     rmmovq %r9, 8(%rsi) # ...and store it to dst
     rmmovq %r10, 16(%rsi) # ...and store it to dst
     rmmovq %r11, 24(%rsi) # ...and store it to dst
-    rmmovq %r12, 32(%rsi) # ...and store it to dst
-    rmmovq %r13, 40(%rsi) # ...and store it to dst
-    rmmovq %r14, 48(%rsi) # ...and store it to dst
-    rmmovq %rbp, 56(%rsi) # ...and store it to dst
-
 Loop0:	
 	andq %r8, %r8		# val <= 0?
 	jle Loop1		# if so, goto Npos:
@@ -66,31 +57,15 @@ Loop2:
     iaddq $1, %rax      # count++
 Loop3:  
     andq %r11, %r11     # val <= 0?
-    jle Loop4       # if so, goto Npos:
-    iaddq $1, %rax      # count++
-Loop4:  
-    andq %r12, %r12     # val <= 0?
-    jle Loop5       # if so, goto Npos:
-    iaddq $1, %rax      # count++
-Loop5:  
-    andq %r13, %r13     # val <= 0?
-    jle Loop6       # if so, goto Npos:
-    iaddq $1, %rax      # count++
-Loop6:  
-    andq %r14, %r14     # val <= 0?
-    jle Loop7       # if so, goto Npos:
-    iaddq $1, %rax      # count++
-Loop7:  
-    andq %rbp, %rbp     # val <= 0?
-    jle test            # if so, goto Npos:
+    jle test        # if so, goto Npos:
     iaddq $1, %rax      # count++
 test:	
-	iaddq $64, %rdi		# src += 8
-	iaddq $64, %rsi		# dst += 8
-    iaddq $-8, %rdx     # len -= 8
+	iaddq $32, %rdi		# src += 8
+	iaddq $32, %rsi		# dst += 8
+    iaddq $-4, %rdx     # len -= 8
 	jg Load 			# if so, goto Loop:
 R0:
-    iaddq $7, %rdx
+    iaddq $3, %rdx
     jg R00
     jmp Done
 R00:
@@ -117,47 +92,7 @@ R22:
     mrmovq 16(%rdi),%r8
     rmmovq %r8, 16(%rsi)
     andq %r8, %r8
-    jle R3            
-    iaddq $1,%rax
-R3:
-    iaddq $-1, %rdx
-    jg R33
-    jmp Done
-R33:
-    mrmovq 24(%rdi),%r8
-    rmmovq %r8, 24(%rsi)
-    andq %r8, %r8
-    jle R4            
-    iaddq $1,%rax
-R4:
-    iaddq $-1, %rdx
-    jg R44
-    jmp Done
-R44:
-    mrmovq 32(%rdi),%r8
-    rmmovq %r8, 32(%rsi)
-    andq %r8, %r8
-    jle R5    
-    iaddq $1,%rax
-R5:
-    iaddq $-1, %rdx
-    jg R55
-    jmp Done
-R55:
-    mrmovq 40(%rdi),%r8
-    rmmovq %r8, 40(%rsi)
-    andq %r8, %r8
-    jle R6            
-    iaddq $1,%rax
-R6:
-    iaddq $-1, %rdx
-    jg R66
-    jmp Done
-R66:
-    mrmovq 48(%rdi),%r8
-    rmmovq %r8, 48(%rsi)
-    andq %r8, %r8
-    jle Done           
+    jle Done
     iaddq $1,%rax
 ##################################################################
 # Do not modify the following section of code
@@ -178,66 +113,66 @@ src:
 	.quad -1
 	.quad 2
 	.quad 3
-	.quad 4
+	.quad -4
 	.quad -5
-	.quad -6
+	.quad 6
 	.quad 7
 	.quad -8
-	.quad 9
+	.quad -9
 	.quad 10
-	.quad -11
-	.quad -12
-	.quad 13
+	.quad 11
+	.quad 12
+	.quad -13
 	.quad -14
 	.quad -15
 	.quad 16
 	.quad 17
 	.quad -18
-	.quad -19
+	.quad 19
 	.quad 20
 	.quad -21
-	.quad 22
-	.quad 23
+	.quad -22
+	.quad -23
 	.quad -24
 	.quad 25
 	.quad 26
 	.quad -27
 	.quad -28
-	.quad -29
+	.quad 29
 	.quad -30
 	.quad 31
 	.quad -32
 	.quad 33
 	.quad 34
 	.quad 35
-	.quad -36
+	.quad 36
 	.quad 37
 	.quad -38
-	.quad 39
+	.quad -39
 	.quad -40
-	.quad -41
+	.quad 41
 	.quad -42
-	.quad -43
+	.quad 43
 	.quad -44
-	.quad -45
-	.quad -46
-	.quad -47
+	.quad 45
+	.quad 46
+	.quad 47
 	.quad 48
-	.quad 49
-	.quad -50
+	.quad -49
+	.quad 50
 	.quad 51
 	.quad 52
 	.quad -53
-	.quad -54
+	.quad 54
 	.quad 55
 	.quad -56
 	.quad -57
-	.quad 58
-	.quad 59
-	.quad 60
-	.quad 61
-	.quad 62
-	.quad 63
+	.quad -58
+	.quad -59
+	.quad -60
+	.quad -61
+	.quad -62
+	.quad -63
 	.quad 0xbcdefa # This shouldn't get moved
 
 	.align 16
