@@ -17,20 +17,78 @@ ncopy:
 # You can modify this portion
 	# Loop header
 	xorq %rax,%rax		# count = 0;
-	andq %rdx,%rdx		# len <= 0?
-	jle Done		# if so, goto Done:
+    rrmovq %rdx, %rcx   # limit = len
+	iaddq $-7, %rcx     # limit -= 7
+	jle Remain		# if so, goto Done:
 
-Loop:	
+Loop0:	
     mrmovq (%rdi), %r10	# read val from src...
 	rmmovq %r10, (%rsi)	# ...and store it to dst
 	andq %r10, %r10		# val <= 0?
-	jle Npos		# if so, goto Npos:
+	jle Loop1		# if so, goto Npos:
 	iaddq $1, %rax		# count++
-Npos:	
-	iaddq $8, %rdi		# src++
-	iaddq $8, %rsi		# dst++
-    iaddq $-1, %rdx     # len--
-	jg Loop			# if so, goto Loop:
+Loop1:  
+    mrmovq 8(%rdi), %r10 # read val from src...
+    rmmovq %r10, 8(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle Loop2       # if so, goto Npos:
+    iaddq $1, %rax      # count++
+Loop2:  
+    mrmovq 16(%rdi), %r10 # read val from src...
+    rmmovq %r10, 16(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle Loop3       # if so, goto Npos:
+    iaddq $1, %rax      # count++
+Loop3:  
+    mrmovq 24(%rdi), %r10 # read val from src...
+    rmmovq %r10, 24(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle Loop4       # if so, goto Npos:
+    iaddq $1, %rax      # count++
+Loop4:  
+    mrmovq 32(%rdi), %r10 # read val from src...
+    rmmovq %r10, 32(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle Loop5       # if so, goto Npos:
+    iaddq $1, %rax      # count++
+Loop5:  
+    mrmovq 40(%rdi), %r10 # read val from src...
+    rmmovq %r10, 40(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle Loop6       # if so, goto Npos:
+    iaddq $1, %rax      # count++
+Loop6:  
+    mrmovq 48(%rdi), %r10 # read val from src...
+    rmmovq %r10, 48(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle Loop7       # if so, goto Npos:
+    iaddq $1, %rax      # count++
+Loop7:  
+    mrmovq 56(%rdi), %r10 # read val from src...
+    rmmovq %r10, 56(%rsi) # ...and store it to dst
+    andq %r10, %r10     # val <= 0?
+    jle test            # if so, goto Npos:
+    iaddq $1, %rax      # count++
+test:	
+	iaddq $64, %rdi		# src += 8
+	iaddq $64, %rsi		# dst += 8
+    iaddq $-8, %rdx     # len -= 8
+    iaddq $-8, %rcx     # limit -= 8
+	jg Loop0			# if so, goto Loop:
+RemainTest:
+    andq %rdx, %rdx
+    jle Done
+Remain:
+    mrmovq (%rdi), %r11 # read val from src...
+    rmmovq %r11, (%rsi) # ...and store it to dst
+    andq %r11, %r11     # val <= 0?
+    jle test2           # if so, goto Npos:
+    iaddq $1, %rax      # count++
+test2:
+    iaddq $8, %rdi
+    iaddq $8, %rsi
+    iaddq $-1, %rdx
+    jg Remain
 ##################################################################
 # Do not modify the following section of code
 # Function epilogue.
