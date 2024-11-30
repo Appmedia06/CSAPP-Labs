@@ -40,24 +40,12 @@ Cache_t Init_cache(void)
 {
     int set_num = 1 << s_bit;
     Cache_t LRUCache = malloc(sizeof(LRUCache));
-    if (LRUCache == NULL) {
-        printf("LRUCache Malloc failed\n");
-        exit(-1);
-    }
 
     LRUCache->s = s_bit;
     LRUCache->E = E_line;
     LRUCache->b = b_block;
     LRUCache->line = (CacheLine **) malloc(set_num * sizeof(CacheLine *));
-    if (LRUCache->line == NULL) {
-        printf("LRUCache->line Malloc failed\n");
-        exit(-1);
-    }
     set_capacity = (int *) malloc(set_num * sizeof(int));
-    if (set_capacity == NULL) {
-        printf("set_capacity Malloc failed\n");
-        exit(-1);
-    }
     for (int i = 0; i < set_num; i++) {
         set_capacity[i] = 0;
         LRUCache->line[i] = (CacheLine *) malloc(E_line * sizeof(CacheLine));
@@ -135,7 +123,6 @@ void cache_movement(Cache_t LRUCache, int set_index, uint32_t tag)
             update_cache(LRUCache->line[set_index], EVICTION, line_idx, tag);
         }
     }
-
 }
 
 void get_trace(Cache_t LRUCache)
@@ -215,10 +202,8 @@ void read_arg(int argc, char* argv[])
                 b_block = atoi(optarg);
                 break;
             case 't':
-                // size_t len = strlen(optarg);
-                // strncpy(filename, optarg, len);
-                // filename[len - 1] = '\0';
-                strcpy(filename, optarg);
+                strncpy(filename, optarg, sizeof(filename) - 1);
+                filename[sizeof(filename) - 1] = '\0';
                 break;
             default:
                 printf("Unknown option %c !!!\n", opt);
