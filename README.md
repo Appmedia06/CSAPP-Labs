@@ -8,3 +8,5 @@
 [CS:APP Attack Lab 筆記](https://hackmd.io/@Appmedia/CSAPP_Attack_Lab)
 ## Architecture-Lab
 [CS:APP Architecture-Lab 筆記](https://hackmd.io/@Appmedia/CSAPP_Architecture-Lab)
+## Shell-Lab
+[CS:APP Shell-Lab 筆記](https://hackmd.io/@Appmedia/CSAPP_Shell-Lab)
