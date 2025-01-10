@@ -10,3 +10,5 @@
 [CS:APP Architecture-Lab 筆記](https://hackmd.io/@Appmedia/CSAPP_Architecture-Lab)
 ## Shell-Lab
 [CS:APP Shell-Lab 筆記](https://hackmd.io/@Appmedia/CSAPP_Shell-Lab)
+## Malloc-Lab
+[CS:APP Malloc-Lab 筆記](https://hackmd.io/@Appmedia/CSAPP_Malloc-Lab)
